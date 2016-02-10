@@ -30,9 +30,20 @@ $(document).ready(function() {
     $("#health").html( '<span id="health">' + JSON.stringify(data) + '</span>' );  
   });
   
+  // https://starfighter.readme.io/docs/venue-healthcheck 
+  $.get("/api/venues/" + "OBHOEX" + "/heartbeat", function( data ) {
+    console.log( JSON.stringify(data) );
+  });
+  
+  // https://starfighter.readme.io/docs/list-stocks-on-venue  
   $.get("/api/venues/" + "OBHOEX" + "/stocks", function( data ) {
     console.log( JSON.stringify(data) );
   });
+  
+  // https://starfighter.readme.io/docs/get-orderbook-for-stock 
+  $.get("/api/venues/" + "OBHOEX" + "/stocks/ISB", function( data ) {
+    console.log( JSON.stringify(data) );
+  });  
 });
 </script>
 
