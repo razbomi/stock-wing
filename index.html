@@ -9,6 +9,7 @@
 <body>
 
     <div>Date: <input type="text" name="date" id="date" /></div>
+    <div>Token: <input type="text" name="token" id="token" /><button id="save">Sign In</button></div>
     <div>Health: <span id="health"></span></div>
     
 
@@ -21,10 +22,16 @@
 <script>
 $(document).ready(function() {
   $( "#date" ).datepicker();
-  $( "#token" ).text( Cookies.get( "api_key" ) );
+  $('#save').click(function() {
+    Cookies.set( "api_key", $('#token').val() );
+  });
+
+  $.get("/api/heartbeat", function( data ) {
+    $("#health").html( '<span id="health">' + JSON.stringify(data) + '</span>' );  
+  });
   
-  $.get("https://api.stockfighter.io/ob/api/heartbeat", function( data ) {
-    $("#health").html( data );  
+  $.get("/api/venues/" + "OBHOEX" + "/stocks", function( data ) {
+    console.log( JSON.stringify(data) );
   });
 });
 </script>
