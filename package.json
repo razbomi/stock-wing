@@ -1,0 +1,26 @@
+{
+  "name": "stock-wing",
+  "version": "1.0.0",
+  "description": "Service layer or proxy for the stockfighter game",
+  "main": "server.js",
+  "scripts": {
+    "test": "grunt test",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/razbomi/stock-wing.git"
+  },
+  "keywords": [
+    "stockfighter"
+  ],
+  "author": "Razbomi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/razbomi/stock-wing/issues"
+  },
+  "homepage": "https://github.com/razbomi/stock-wing#readme",
+  "dependencies": {
+    "connect": "^3.4.1"
+  }
+}
