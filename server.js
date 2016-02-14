@@ -3,8 +3,10 @@ var connect = require('connect');
 var serveStatic = require('serve-static');
 var httpProxy = require('http-proxy');
 
-var app = connect();
 var proxy = httpProxy.createProxyServer();
+
+var app = connect();
+// app.use( connect.logger() );
 
 // Routes: Should you put in modules
 app.use('/api', function fooMiddleware(req, res) {

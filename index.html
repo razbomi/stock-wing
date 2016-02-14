@@ -10,7 +10,10 @@
 
     <div>Date: <input type="text" name="date" id="date" /></div>
     <div>Token: <input type="text" name="token" id="token" /><button id="save">Sign In</button></div>
-    <div>Health: <span id="health"></span></div>
+    <div>Health: <div id="health"></div></div>
+    <div>Venue Health: <div id="venue-health"></div></div>
+    <div>Stocks: <div id="stocks"></div></div>
+    <div>Order Book: <div id="orders"></div></div>
     
 
     <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js'></script>
@@ -21,28 +24,31 @@
 <!-- Simplest Thing First -->  
 <script>
 $(document).ready(function() {
+  var venue = "TESTEX";
+  var stock = "FOOBAR";
+  
   $( "#date" ).datepicker();
   $('#save').click(function() {
     Cookies.set( "api_key", $('#token').val() );
   });
 
   $.get("/api/heartbeat", function( data ) {
-    $("#health").html( '<span id="health">' + JSON.stringify(data) + '</span>' );  
+    $("#health").html( '<span id="health-text">' + JSON.stringify(data) + '</span>' );  
   });
   
   // https://starfighter.readme.io/docs/venue-healthcheck 
-  $.get("/api/venues/" + "OBHOEX" + "/heartbeat", function( data ) {
-    console.log( JSON.stringify(data) );
+  $.get("/api/venues/" + venue + "/heartbeat", function( data ) {
+    $("#venue-health").html( '<span id="venue-health-text">' + JSON.stringify(data) + '</span>' );  
   });
   
   // https://starfighter.readme.io/docs/list-stocks-on-venue  
-  $.get("/api/venues/" + "OBHOEX" + "/stocks", function( data ) {
-    console.log( JSON.stringify(data) );
+  $.get("/api/venues/" + venue + "/stocks", function( data ) {
+    $("#stocks").html( '<span id="stocks-text">' + JSON.stringify(data) + '</span>' );  
   });
   
   // https://starfighter.readme.io/docs/get-orderbook-for-stock 
-  $.get("/api/venues/" + "OBHOEX" + "/stocks/ISB", function( data ) {
-    console.log( JSON.stringify(data) );
+  $.get("/api/venues/" + venue + "/stocks/" + stock, function( data ) {
+    $("#orders").html( '<span id="orders-text">' + JSON.stringify(data) + '</span>' );  
   });  
 });
 </script>
