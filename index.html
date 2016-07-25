@@ -7,6 +7,8 @@
 
 </head>
 <body>
+  
+    <div>Levels: <div id="levels"></div></div>
 
     <div>Date: <input type="text" name="date" id="date" /></div>
     <div>Token: <input type="text" name="token" id="token" /><button id="save">Sign In</button></div>
@@ -23,32 +25,56 @@
 
 <!-- Simplest Thing First -->  
 <script>
+
+// FIXME: Naive ... http://learn.jquery.com/code-organization/concepts/
 $(document).ready(function() {
   var venue = "TESTEX";
   var stock = "FOOBAR";
   
-  $( "#date" ).datepicker();
+  $.post('/gm/levels/first_steps', function(data) {
+    $('#levels').html(JSON.stringify(data))
+  });
+  
+  $("#date").datepicker();
   $('#save').click(function() {
     Cookies.set( "api_key", $('#token').val() );
   });
 
-  $.get("/api/heartbeat", function( data ) {
+  $.get("/ob/api/heartbeat", function( data ) {
     $("#health").html( '<span id="health-text">' + JSON.stringify(data) + '</span>' );  
   });
   
   // https://starfighter.readme.io/docs/venue-healthcheck 
-  $.get("/api/venues/" + venue + "/heartbeat", function( data ) {
+  $.get("/ob/api/venues/" + venue + "/heartbeat", function( data ) {
     $("#venue-health").html( '<span id="venue-health-text">' + JSON.stringify(data) + '</span>' );  
   });
   
   // https://starfighter.readme.io/docs/list-stocks-on-venue  
-  $.get("/api/venues/" + venue + "/stocks", function( data ) {
+  $.get("/ob/api/venues/" + venue + "/stocks", function( data ) {
     $("#stocks").html( '<span id="stocks-text">' + JSON.stringify(data) + '</span>' );  
   });
   
   // https://starfighter.readme.io/docs/get-orderbook-for-stock 
-  $.get("/api/venues/" + venue + "/stocks/" + stock, function( data ) {
-    $("#orders").html( '<span id="orders-text">' + JSON.stringify(data) + '</span>' );  
+  $.get("/ob/api/venues/" + venue + "/stocks/" + stock, function( data ) {
+    console.log(JSON.stringify(data));
+    
+    $('#orders').append('<dl><dt>venue</dt><dd>' + data.venue + '</dd><dt>symbol</dt><dd>' + data.symbol + '</dd><dt>ts</dt><dd>' + data.ts + '</dd></dl>')
+    
+    var bids = [];
+    $.each(data.bids, function () {
+      bids.push('<tr><td>' + this.price + '</td><td>' + this.qty + '</td><td>' + this.isBuy + '</td></tr>');
+    });
+    
+    var head = '<thead><tr><th>price</th><th>qty</th><th>isBuy</th></thead>';
+    $('#orders').append('<table><caption>bids</caption>' + head + '<tbody>' + bids.join('') + '</tbody></table>');
+
+    var asks = [];
+    $.each(data.asks, function () {
+      asks.push('<tr><td>' + this.price + '</td><td>' + this.qty + '</td><td>' + this.isBuy + '</td></tr>');
+    });
+    
+    $('#orders').append('<table><caption>asks</caption><thead>' + head + '<tbody>' + asks.join('') + '</tbody></table>');
+
   });  
 });
 </script>
